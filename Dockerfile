@@ -17,7 +17,8 @@ COPY . .
 
 RUN cargo install --path .
 
-FROM debian:buster-slim
-RUN apt-get update && apt-get install -y extra-runtime-dependencies
+FROM ubuntu
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y ca-certificates
 COPY --from=builder /usr/local/cargo/bin/action-cli /usr/local/bin/action-cli
 CMD ["action-cli"]
