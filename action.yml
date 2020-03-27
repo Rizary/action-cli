@@ -12,5 +12,4 @@ jobs:
       - uses: actions/checkout@3-rizary
       - name: action-cli
         uses: rizary/action-cli@3-rizary
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
