@@ -1,4 +1,4 @@
-FROM rust:1.42.0-alpine3.11
+FROM rust:1.42.0 as builder
 
 LABEL name="action-cli"
 LABEL version="0.4.0"
@@ -17,4 +17,7 @@ COPY . .
 
 RUN cargo install --path .
 
+FROM debian:buster-slim
+RUN apt-get update && apt-get install -y extra-runtime-dependencies
+COPY --from=builder /usr/local/cargo/bin/action-cli /usr/local/bin/action-cli
 CMD ["action-cli"]
