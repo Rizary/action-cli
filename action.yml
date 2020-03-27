@@ -14,4 +14,3 @@ jobs:
         uses: rizary/action-cli@3-rizary
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PRECOMMAND_MESSAGE: You have style errors. See them below.
