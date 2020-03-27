@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3-rizary
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
       - name: action-cli
-        uses: rizary/action-cli@3-rizary
+        uses: action-rs/cargo@v1
+        with:
+          command: run
+          args: -- post-comment
 
