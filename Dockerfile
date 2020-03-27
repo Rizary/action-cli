@@ -1,4 +1,4 @@
-FROM yasuyuky/rust-ssl-static as build
+FROM rust:1.42.0 as build
 
 LABEL name="action-cli"
 LABEL version="0.4.0"
@@ -18,11 +18,11 @@ RUN apt-get update && apt-get -y install ca-certificates libssl-dev && rm -rf /v
 
 ENV PKG_CONFIG_ALLOW_CROSS=1
 
-RUN cargo build --target x86_64-unknown-linux-musl --release
+RUN cargo build --release
 
 RUN mkdir -p /build-out
 
-RUN cp target/x86_64-unknown-linux-musl/release/action-cli /build-out/
+RUN cp target/release/action-cli /build-out/
 
 RUN ls /build-out/
 
