@@ -4,6 +4,14 @@ author: 'zimbatm'
 branding:
   color: 'blue'
   icon: 'hash'
-runs:
-  using: 'node12'
-  main: 'action.js'
+jobs:
+  action-cli:
+    name: action-cli
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3-rizary
+      - name: action-cli
+        uses: rizary/action-cli@3-rizary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PRECOMMAND_MESSAGE: You have style errors. See them below.
