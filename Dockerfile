@@ -1,4 +1,4 @@
-FROM rust:1.42.0 as builder
+FROM yasuyuky/rust-ssl-static as build
 
 LABEL name="action-cli"
 LABEL version="0.4.0"
@@ -11,14 +11,28 @@ LABEL com.github.actions.description="Run action-cli on pull-request"
 LABEL com.github.actions.icon="git-pull-request"
 LABEL com.github.actions.color="green"
 
-WORKDIR /usr/src/action-cli
+COPY ./ ./
 
-COPY . .
-
-RUN cargo install --path .
-
-FROM ubuntu
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y ca-certificates
-COPY --from=builder /usr/local/cargo/bin/action-cli /usr/local/bin/action-cli
-CMD ["action-cli"]
+RUN apt-get update && apt-get -y install ca-certificates libssl-dev && rm -rf /var/lib/apt/lists/*
+
+ENV PKG_CONFIG_ALLOW_CROSS=1
+
+RUN cargo build --target x86_64-unknown-linux-musl --release
+
+RUN mkdir -p /build-out
+
+RUN cp target/x86_64-unknown-linux-musl/release/action-cli /build-out/
+
+RUN ls /build-out/
+
+FROM scratch
+
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+
+COPY --from=build /build-out/action-cli /
+
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+ENV SSL_CERT_DIR=/etc/ssl/certs
+
+CMD ["/action-cli"]
